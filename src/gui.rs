@@ -1,6 +1,6 @@
 use rusqlite::Connection;
 use crate::db::{PasswordEntry, insert_entry, list_entries, delete_entry, search_entries};
-use crate::crypto::{encrypt, decrypt};
+use crate::crypto::{encrypt, decrypt, generate_password};
 use std::ffi::OsStr;
 use std::os::windows::ffi::OsStrExt;
 use std::ptr;
@@ -145,14 +145,18 @@ impl eframe::App for PasswordApp {
             ui.horizontal(|ui| {
                 ui.label("Usuario:"); ui.text_edit_singleline(&mut self.usuario);
                 ui.label("Mail:"); ui.text_edit_singleline(&mut self.mail);
-            });
-            ui.horizontal(|ui| {
-                ui.label("Contraseña:"); ui.text_edit_singleline(&mut self.con);
-                ui.label("Notas:"); ui.text_edit_singleline(&mut self.notas);
+            });            ui.horizontal(|ui| {
+                ui.label("Contraseña:"); 
+                ui.text_edit_singleline(&mut self.con);
+                if ui.button("Generar").clicked() {
+                    self.con = generate_password(16);
+                }
+                ui.label("Notas:"); 
+                ui.text_edit_singleline(&mut self.notas);
             });
             if ui.button("Guardar").clicked() {
                 self.add_entry();
-            }            ui.separator();
+            }ui.separator();
             ui.horizontal(|ui| {
                 ui.label("Buscar:");
                 ui.text_edit_singleline(&mut self.search_query);
