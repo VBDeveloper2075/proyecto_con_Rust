@@ -11,12 +11,20 @@ use winapi::um::winnt::HANDLE;
 use winapi::um::minwinbase::GMEM_MOVEABLE;
 
 pub fn run(conn: Connection, master_key: String) {
-    let options = eframe::NativeOptions::default();
+    let options = eframe::NativeOptions {
+        renderer: eframe::Renderer::default(),  // Elegir automáticamente el mejor renderer disponible
+        follow_system_theme: true,              // Seguir el tema del sistema
+        default_theme: eframe::Theme::Dark,     // Tema por defecto si no se detecta el del sistema
+        ..Default::default()
+    };
+    
     eframe::run_native(
         "Gestor de Contraseñas",
         options,
         Box::new(|_cc| Box::new(PasswordApp::new(conn, master_key))),
-    ).unwrap();
+    ).unwrap_or_else(|e| {
+        eprintln!("Error al iniciar la GUI: {}. Intenta actualizar tus controladores gráficos.", e);
+    });
 }
 
 pub struct PasswordApp {

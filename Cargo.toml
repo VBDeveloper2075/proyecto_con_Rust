@@ -5,8 +5,8 @@ edition = "2021"
 
 [dependencies]
 rusqlite = { version = "0.30", features = ["bundled"] }
-eframe = { version = "0.25", features = ["wgpu", "glow"] }
-egui = "0.25"
+eframe = { version = "0.26", features = ["glow"] }
+egui = "0.26"
 rpassword = "7.2"
 aes-gcm = "0.10"
 aes = "0.8"
